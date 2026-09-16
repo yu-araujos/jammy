@@ -1,4 +1,4 @@
-import { RoomConnecting } from "@/components/room/room-connecting";
+import { RoomView } from "@/components/room/room-view";
 
 export default async function RoomPage({
   params,
@@ -7,5 +7,5 @@ export default async function RoomPage({
 }) {
   const { code } = await params;
 
-  return <RoomConnecting code={code} />;
+  return <RoomView code={code} />;
 }
