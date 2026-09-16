@@ -11,20 +11,26 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { useRouter } from "next/navigation";
 
 export function JoinRoomCard() {
   const [code, setCode] = useState("");
+  const router = useRouter();
 
   // validate the code (length/format), send a join-room request/socket event,
   // and on success navigate to /room/[code]. Should also surface an error
   // state if the room doesn't exist or the code is invalid.
-  function joinRoom() {}
+  function joinRoom() {
+    router.push(`/room/${code}`);
+  }
 
   return (
     <Card>
       <CardHeader>
         <CardTitle>Join a room</CardTitle>
-        <CardDescription>Enter the code the host shared with you.</CardDescription>
+        <CardDescription>
+          Enter the code the host shared with you.
+        </CardDescription>
       </CardHeader>
       <CardContent className="flex flex-col gap-4">
         <div className="flex flex-col gap-2">
@@ -38,7 +44,11 @@ export function JoinRoomCard() {
             className="text-center text-2xl tracking-[0.3em] uppercase"
           />
         </div>
-        <Button onClick={joinRoom} disabled={code.length !== 6} className="w-full">
+        <Button
+          onClick={joinRoom}
+          disabled={code.length !== 6}
+          className="w-full"
+        >
           Join room
         </Button>
       </CardContent>

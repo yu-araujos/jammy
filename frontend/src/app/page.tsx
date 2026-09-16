@@ -6,6 +6,7 @@ import { JoinRoomCard } from "@/components/room/join-room-card";
 
 export default function Home() {
   const [mode, setMode] = useState<"create" | "join">("create");
+  const [isLoading, setIsLoading] = useState(false);
 
   return (
     <div className="flex flex-1 items-center justify-center p-6">
@@ -13,10 +14,19 @@ export default function Home() {
         <h1 className="mb-6 text-center text-3xl font-semibold">Jammy</h1>
 
         {/* MOTION: crossfade/slide when switching between create and join */}
-        {mode === "create" ? <CreateRoomCard /> : <JoinRoomCard />}
+        {mode === "create" ? (
+          <CreateRoomCard
+            isLoading={isLoading}
+            onLoadingChange={setIsLoading}
+          />
+        ) : (
+          <JoinRoomCard />
+        )}
 
-        <p className="mt-4 text-center text-sm text-muted-foreground">
-          {mode === "create" ? (
+        <p className="mt-5 text-center text-sm text-muted-foreground">
+          {isLoading ? (
+            <span className="text-xl">Creating your room…</span>
+          ) : mode === "create" ? (
             <button
               type="button"
               onClick={() => setMode("join")}
@@ -30,7 +40,7 @@ export default function Home() {
               onClick={() => setMode("create")}
               className="underline underline-offset-4 hover:text-foreground"
             >
-              Don&apos;t have a room? Create one
+              Don't have a room? Create one
             </button>
           )}
         </p>
