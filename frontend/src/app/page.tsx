@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { CreateRoomCard } from "@/components/room/create-room-card";
 import { JoinRoomCard } from "@/components/room/join-room-card";
+import { AnimatePresence, motion } from "motion/react";
 
 export default function Home() {
   const [mode, setMode] = useState<"create" | "join">("create");
@@ -13,15 +14,32 @@ export default function Home() {
       <div className="w-full max-w-sm">
         <h1 className="mb-6 text-center text-3xl font-semibold">Jammy</h1>
 
-        {/* MOTION: crossfade/slide when switching between create and join */}
-        {mode === "create" ? (
-          <CreateRoomCard
-            isLoading={isLoading}
-            onLoadingChange={setIsLoading}
-          />
-        ) : (
-          <JoinRoomCard />
-        )}
+        <AnimatePresence mode="wait">
+          {mode === "create" ? (
+            <motion.div
+              key="create"
+              initial={{ opacity: 0, scale: 0.85 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.9, transition: { duration: 0.12 } }}
+              transition={{ type: "spring", stiffness: 500, damping: 30 }}
+            >
+              <CreateRoomCard
+                isLoading={isLoading}
+                onLoadingChange={setIsLoading}
+              />
+            </motion.div>
+          ) : (
+            <motion.div
+              key="join"
+              initial={{ opacity: 0, scale: 0.85 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.9, transition: { duration: 0.12 } }}
+              transition={{ type: "spring", stiffness: 500, damping: 30 }}
+            >
+              <JoinRoomCard />
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         <p className="mt-5 text-center text-sm text-muted-foreground">
           {isLoading ? (

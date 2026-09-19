@@ -3,9 +3,11 @@ import type { QueueItem } from "@/store/slices/queueSlice";
 
 const queue: QueueItem[] = [];
 
-// format a duration in seconds as "m:ss" (e.g. 213 -> "3:33")
 function formatDuration(seconds: number): string {
-  return "";
+  const minute = Math.floor(seconds / 60);
+  const second = (seconds % 60).toString().padStart(2, "0");
+  const formatedDuration = `${minute}:${second}`;
+  return formatedDuration;
 }
 
 export function QueueList() {
