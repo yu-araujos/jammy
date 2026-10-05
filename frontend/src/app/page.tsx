@@ -58,7 +58,7 @@ export default function Home() {
               onClick={() => setMode("create")}
               className="underline underline-offset-4 hover:text-foreground"
             >
-              Don't have a room? Create one
+              {"Don't have a room? Create one"}
             </button>
           )}
         </p>
