@@ -27,19 +27,41 @@ const roomSlice = createSlice({
     roomEntered(
       state,
       action: PayloadAction<{ roomCode: string; isHost: boolean }>,
-    ) {},
+    ) {
+      state.roomCode = action.payload.roomCode;
+      state.isHost = action.payload.isHost;
+      state.participants = [];
+    },
 
     // clear everything back to initialState (leaving the room / room closed)
-    roomLeft(state) {},
+    roomLeft() {
+      return initialState;
+    },
 
     // add a participant to the list when someone joins (avoid duplicate ids)
-    participantJoined(state, action: PayloadAction<Participant>) {},
+    participantJoined(state, action: PayloadAction<Participant>) {
+      const idAlreadyJoined = state.participants.some(
+        (participant) => action.payload.id === participant.id,
+      );
+      if (!idAlreadyJoined) {
+        state.participants.push(action.payload);
+      }
+    },
 
     // remove a participant from the list by id when they disconnect
-    participantLeft(state, action: PayloadAction<{ id: string }>) {},
+    participantLeft(state, action: PayloadAction<{ id: string }>) {
+      const findParticipantIndex = state.participants.findIndex(
+        (participant) => participant.id === action.payload.id,
+      );
+      if (findParticipantIndex !== -1) {
+        state.participants.splice(findParticipantIndex, 1);
+      }
+    },
 
     // flip hostDisconnected to true when the host drops connection
-    hostDisconnected(state) {},
+    hostDisconnected(state) {
+      state.hostDisconnected = true;
+    },
   },
 });
 
