@@ -5,6 +5,7 @@ import Link from "next/link";
 import { DoorOpen } from "lucide-react";
 import { RoomCodeBadge } from "./room-code-badge";
 import { QueueList } from "./queue-list";
+import { SongSearch } from "./song-search";
 import { useRouter } from "next/navigation";
 
 export function RoomView({ code }: { code: string }) {
@@ -34,6 +35,7 @@ export function RoomView({ code }: { code: string }) {
       </Link>
 
       <RoomCodeBadge code={code} />
+      <SongSearch />
       <QueueList />
     </div>
   );

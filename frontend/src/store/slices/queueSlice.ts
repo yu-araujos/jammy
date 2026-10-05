@@ -21,13 +21,25 @@ const queueSlice = createSlice({
   initialState,
   reducers: {
     // add a song to the end of the queue
-    songAdded(state, action: PayloadAction<QueueItem>) {},
+    songAdded(state, action: PayloadAction<QueueItem>) {
+      state.items.push(action.payload);
+    },
 
     // remove a song from the queue by id
-    songRemoved(state, action: PayloadAction<{ id: string }>) {},
+    songRemoved(state, action: PayloadAction<{ id: string }>) {
+      const findSongIndex = state.items.findIndex(
+        (itemId) => itemId.id === action.payload.id,
+      );
+      if (findSongIndex !== -1) {
+        state.items.splice(findSongIndex, 1);
+      }
+    },
 
     // move a song from one index to another (drag-to-reorder)
-    songReordered(state, action: PayloadAction<{ fromIndex: number; toIndex: number }>) {},
+    songReordered(
+      state,
+      action: PayloadAction<{ fromIndex: number; toIndex: number }>,
+    ) {},
 
     // remove the first song from the queue (called when a track finishes and the next one starts)
     songDequeued(state) {},
