@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { Plus, Search } from "lucide-react";
+import { Plus, Search, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useAppDispatch } from "@/store/hooks";
@@ -14,11 +14,13 @@ import { nanoid } from "nanoid";
 export function SongSearch() {
   const dispatch = useAppDispatch();
   const [query, setQuery] = useState("");
-  const [results, setResults] = useState<QueueItem[]>(mockSearchResults);
+  const [results, setResults] = useState<QueueItem[]>([]);
 
   // call the /api/search proxy with `query` (backend), then setResults with
   // the songs it returns. Handle the loading and "no results" states too.
-  function searchSongs() {}
+  function searchSongs() {
+    setResults(mockSearchResults);
+  }
 
   function addSong(song: QueueItem) {
     const id = nanoid();
@@ -34,11 +36,28 @@ export function SongSearch() {
         }}
         className="flex gap-2"
       >
-        <Input
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          placeholder="Search a song"
-        />
+        <div className="relative flex-1">
+          <Input
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Search a song"
+            className="pr-9"
+          />
+          {query !== "" && (
+            <Button
+              type="button"
+              size="icon"
+              variant="ghost"
+              className="absolute top-1/2 right-1 size-7 -translate-y-1/2"
+              onClick={() => {
+                setQuery("");
+                setResults([]);
+              }}
+            >
+              <X className="h-4 w-4" />
+            </Button>
+          )}
+        </div>
         <Button type="submit" size="icon" disabled={query.trim() === ""}>
           <Search className="h-4 w-4" />
         </Button>
