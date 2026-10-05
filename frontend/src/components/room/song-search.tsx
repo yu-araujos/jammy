@@ -8,7 +8,6 @@ import { Input } from "@/components/ui/input";
 import { useAppDispatch } from "@/store/hooks";
 import { songAdded, type QueueItem } from "@/store/slices/queueSlice";
 import { formatDuration } from "@/lib/format-duration";
-import { mockSearchResults } from "@/mocks/search";
 import { nanoid } from "nanoid";
 
 export function SongSearch() {
@@ -18,9 +17,7 @@ export function SongSearch() {
 
   // call the /api/search proxy with `query` (backend), then setResults with
   // the songs it returns. Handle the loading and "no results" states too.
-  function searchSongs() {
-    setResults(mockSearchResults);
-  }
+  function searchSongs() {}
 
   function addSong(song: QueueItem) {
     const id = nanoid();
