@@ -14,11 +14,13 @@ export function Player() {
     (state) => state.player,
   );
 
-  // dispatch playbackToggled
-  function togglePlayback() {}
+  function togglePlayback() {
+    dispatch(playbackToggled());
+  }
 
-  // dispatch volumeChanged with the new value from the slider (0 to 1)
-  function changeVolume(value: number) {}
+  function changeVolume(value: number) {
+    dispatch(volumeChanged({ volume: value }));
+  }
 
   if (!currentTrack) {
     return (
@@ -46,11 +48,16 @@ export function Player() {
         <div className="min-w-0 flex-1">
           <p className="truncate font-semibold">{currentTrack.title}</p>
           <p className="font-mono text-xs text-muted-foreground">
-            {formatDuration(progressSeconds)} / {formatDuration(currentTrack.duration)}
+            {formatDuration(progressSeconds)} /{" "}
+            {formatDuration(currentTrack.duration)}
           </p>
         </div>
         <Button type="button" size="icon" onClick={togglePlayback}>
-          {isPlaying ? <Pause className="h-5 w-5" /> : <Play className="h-5 w-5" />}
+          {isPlaying ? (
+            <Pause className="h-5 w-5" />
+          ) : (
+            <Play className="h-5 w-5" />
+          )}
         </Button>
       </div>
 
