@@ -24,7 +24,10 @@ const roomSlice = createSlice({
   initialState,
   reducers: {
     // set roomCode, isHost and reset participants when a room is created (host) or joined (guest)
-    roomEntered(state, action: PayloadAction<{ roomCode: string; isHost: boolean }>) {},
+    roomEntered(
+      state,
+      action: PayloadAction<{ roomCode: string; isHost: boolean }>,
+    ) {},
 
     // clear everything back to initialState (leaving the room / room closed)
     roomLeft(state) {},

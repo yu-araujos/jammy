@@ -6,10 +6,13 @@ import { DoorOpen } from "lucide-react";
 import { RoomCodeBadge } from "./room-code-badge";
 import { QueueList } from "./queue-list";
 import { SongSearch } from "./song-search";
+import { Player } from "./player";
 import { useRouter } from "next/navigation";
+import { useAppSelector } from "@/store/hooks";
 
 export function RoomView({ code }: { code: string }) {
   const router = useRouter();
+  const isHost = useAppSelector((state) => state.room.isHost);
 
   useEffect(() => {
     // if the user landed here fresh (e.g. scanned the QR) and hasn't joined
@@ -35,6 +38,7 @@ export function RoomView({ code }: { code: string }) {
       </Link>
 
       <RoomCodeBadge code={code} />
+      {isHost && <Player />}
       <SongSearch />
       <QueueList />
     </div>
