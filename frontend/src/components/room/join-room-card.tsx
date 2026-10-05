@@ -12,16 +12,19 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 export function JoinRoomCard() {
   const [code, setCode] = useState("");
   const router = useRouter();
 
-  // validate the code (length/format), send a join-room request/socket event,
-  // and on success navigate to /room/[code]. Should also surface an error
-  // state if the room doesn't exist or the code is invalid.
   function joinRoom() {
-    router.push(`/room/${code}`);
+    const verifyCode = code.length === 6 && /^[A-Z0-9]{6}$/.test(code);
+    if (verifyCode) {
+      router.push(`/room/${code}`);
+    } else {
+      toast.error("Invalid code");
+    }
   }
 
   return (
