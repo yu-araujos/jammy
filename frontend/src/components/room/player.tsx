@@ -1,6 +1,8 @@
 "use client";
 
+import { useRef } from "react";
 import Image from "next/image";
+import YouTube, { type YouTubePlayer } from "react-youtube";
 import { Pause, Play, Volume2 } from "lucide-react";
 import { motion } from "motion/react";
 import { Button } from "@/components/ui/button";
@@ -13,6 +15,7 @@ export function Player() {
   const { currentTrack, isPlaying, progressSeconds, volume } = useAppSelector(
     (state) => state.player,
   );
+  const youtubePlayer = useRef<YouTubePlayer | null>(null);
 
   function togglePlayback() {
     dispatch(playbackToggled());
@@ -37,6 +40,16 @@ export function Player() {
 
   return (
     <div className="flex w-full max-w-lg flex-col gap-4 rounded-2xl border border-border bg-card p-4">
+      {/* hidden on purpose: the audio plays here, the custom UI replaces the YouTube controls */}
+      <YouTube
+        videoId={currentTrack.videoId}
+        opts={{ height: "0", width: "0", playerVars: { controls: 0 } }}
+        onReady={(event) => {
+          youtubePlayer.current = event.target;
+        }}
+        onEnd={() => {}}
+      />
+
       <div className="flex items-center gap-4">
         <Image
           src={currentTrack.thumbnail}
