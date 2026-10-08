@@ -1,18 +1,56 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import Image from "next/image";
+import YouTube, { type YouTubePlayer } from "react-youtube";
 import { Pause, Play, Volume2 } from "lucide-react";
 import { motion } from "motion/react";
 import { Button } from "@/components/ui/button";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { formatDuration } from "@/lib/format-duration";
-import { playbackToggled, volumeChanged } from "@/store/slices/playerSlice";
+import {
+  playbackStopped,
+  playbackToggled,
+  progressUpdated,
+  trackStarted,
+  volumeChanged,
+} from "@/store/slices/playerSlice";
+import { songDequeued } from "@/store/slices/queueSlice";
 
 export function Player() {
   const dispatch = useAppDispatch();
   const { currentTrack, isPlaying, progressSeconds, volume } = useAppSelector(
     (state) => state.player,
   );
+  const { items } = useAppSelector((state) => state.queue);
+  const youtubePlayer = useRef<YouTubePlayer | null>(null);
+
+  useEffect(() => {
+    // update player
+    if (!isPlaying) {
+      youtubePlayer.current?.pauseVideo();
+    } else {
+      youtubePlayer.current?.playVideo();
+    }
+  }, [isPlaying]);
+
+  // update volume
+  useEffect(() => {
+    const convertedVolume = volume * 100;
+    youtubePlayer.current?.setVolume(convertedVolume);
+  }, [volume]);
+
+  // update progress
+  useEffect(() => {
+    const progress = setInterval(async () => {
+      const currentTime = await youtubePlayer.current?.getCurrentTime();
+      if (currentTime !== undefined) {
+        dispatch(progressUpdated({ seconds: currentTime }));
+      }
+    }, 1000);
+
+    return () => clearInterval(progress);
+  }, [isPlaying]);
 
   function togglePlayback() {
     dispatch(playbackToggled());
@@ -20,6 +58,15 @@ export function Player() {
 
   function changeVolume(value: number) {
     dispatch(volumeChanged({ volume: value }));
+  }
+
+  function onEnd() {
+    if (items[0]) {
+      dispatch(trackStarted(items[0]));
+      dispatch(songDequeued());
+    } else {
+      dispatch(playbackStopped());
+    }
   }
 
   if (!currentTrack) {
@@ -37,6 +84,16 @@ export function Player() {
 
   return (
     <div className="flex w-full max-w-lg flex-col gap-4 rounded-2xl border border-border bg-card p-4">
+      {/* hidden on purpose: the audio plays here, the custom UI replaces the YouTube controls  */}
+      <YouTube
+        videoId={currentTrack.videoId}
+        opts={{ height: "0", width: "0", playerVars: { controls: 0 } }}
+        onReady={(event) => {
+          youtubePlayer.current = event.target;
+        }}
+        onEnd={onEnd}
+      />
+
       <div className="flex items-center gap-4">
         <Image
           src={currentTrack.thumbnail}

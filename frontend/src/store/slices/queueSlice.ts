@@ -39,13 +39,20 @@ const queueSlice = createSlice({
     songReordered(
       state,
       action: PayloadAction<{ fromIndex: number; toIndex: number }>,
-    ) {},
+    ) {
+      const [moved] = state.items.splice(action.payload.fromIndex, 1);
+      state.items.splice(action.payload.toIndex, 0, moved);
+    },
 
     // remove the first song from the queue (called when a track finishes and the next one starts)
-    songDequeued(state) {},
+    songDequeued(state) {
+      state.items.shift();
+    },
 
     // replace the whole queue at once (e.g. syncing state from the server on join)
-    queueReplaced(state, action: PayloadAction<QueueItem[]>) {},
+    queueReplaced(state, action: PayloadAction<QueueItem[]>) {
+      state.items = action.payload;
+    },
   },
 });
 
